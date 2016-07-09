@@ -1,0 +1,31 @@
+<!-- Kode client-side -->
+<!-- Tampilan yang akan dilihat user pada web browser -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript">
+			var socketio = io.connect("127.0.0.1:8080");
+			
+			// event-handler jika client menerima data dari server
+			socketio.on("message_to_client", function(data) {
+			
+				// menampilkan data yang diterima digabung dengan chat history yang ada 
+				document.getElementById("chatlog").innerHTML = ("<hr/>" +
+				data['message'] + document.getElementById("chatlog").innerHTML);
+			});
+			
+			// mengirimkan pesan ke server setelah user menekan tombol 'send' 
+			function sendMessage() {
+				var msg = document.getElementById("message_input").value;
+				socketio.emit("message_to_server", { message : msg});
+			}
+        </script>
+    </head>
+    <body>
+        <input type="text" id="message_input"/>
+        <button onclick="sendMessage()">send</button>
+        <div id="chatlog"></div>
+    </body>
+</html>
